@@ -11,7 +11,7 @@ it('should return all users', function (int $amountOfUsers) {
 
     // Then
     $response->assertJson([
-        'data' => $users->toJson()
+        'data' => $users->toArray()
     ]);
 })->with([
     10,
