@@ -3,6 +3,9 @@
 use App\Models\User;
 use function Pest\Laravel\getJson;
 
+beforeEach(function (){
+    $this->withoutExceptionHandling();
+});
 it('should return all users', function (int $amountOfUsers) {
     // Given
     $users = User::factory($amountOfUsers)->create();

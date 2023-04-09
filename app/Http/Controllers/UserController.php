@@ -35,9 +35,10 @@ class UserController extends Controller
             $result = $query->get();
         } else if ($religion)
         {
-            $result = User::query()
-                ->where('religion', $religion)
-                ->get();
+            $query = User::query();
+            $filter = Filters::from('religion')->create($religion);
+            $filter->handle($query);
+            $result = $query->get();
         }
         else {
             $result = User::all();
