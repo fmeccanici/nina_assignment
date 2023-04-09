@@ -3,16 +3,16 @@
 namespace App\Enums;
 
 use App\Filters\AllergiesFilter;
-use App\Filters\BelowAgeFilter;
 use App\Filters\Filter;
 use App\Filters\GenderFilter;
+use App\Filters\MaxAgeFilter;
 use App\Filters\MinAgeFilter;
 use App\Filters\ReligionFilter;
 use App\Filters\ZipcodeFilter;
 
 enum Filters: string
 {
-    case BELOW_AGE = 'belowAge';
+    case MAX_AGE = 'max_age';
     case RELIGION = 'religion';
     case ALLERGIES = 'users.allergies';
     case GENDER = 'gender';
@@ -22,7 +22,7 @@ enum Filters: string
     public function create(int|string|bool $value): Filter
     {
         return match($this) {
-            self::BELOW_AGE => new BelowAgeFilter($value),
+            self::MAX_AGE => new MaxAgeFilter($value),
             self::RELIGION => new ReligionFilter($value),
             self::ALLERGIES => new AllergiesFilter($value),
             self::GENDER => new GenderFilter($value),

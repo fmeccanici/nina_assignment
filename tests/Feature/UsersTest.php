@@ -38,7 +38,7 @@ it('should filter on maximum age', function (int $amountOfUsersBelowAgeLimit, in
 
     // When
     getJson(route('users.index', [
-        'filter[belowAge]' => $ageLimit
+        'filter[max_age]' => $ageLimit
     ]))
 
     // Then
@@ -129,7 +129,7 @@ it('should filter on age and religion', function (int $amountOfResultingUsers, s
     // When
     getJson(route('users.index', [
         'filter[religion]' => $religion,
-        'filter[belowAge]' => $ageLimit
+        'filter[max_age]' => $ageLimit
     ]))
 
         // Then

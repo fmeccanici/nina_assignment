@@ -5,7 +5,7 @@ namespace App\Filters;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 
-class BelowAgeFilter extends Filter
+class MaxAgeFilter extends Filter
 {
 
     function handle(Builder $query, Closure $next): Builder
