@@ -26,7 +26,7 @@ it('should return all users', function (int $amountOfUsers) {
     100
 ]);
 
-it('should filter on age', function (int $amountOfUsersBelowAgeLimit, int $ageLimit) {
+it('should filter on maximum age', function (int $amountOfUsersBelowAgeLimit, int $ageLimit) {
     // Given
     $usersBelowAgeLimit = User::factory($amountOfUsersBelowAgeLimit)->create([
         'age' => rand(1, $ageLimit - 1)
@@ -46,6 +46,32 @@ it('should filter on age', function (int $amountOfUsersBelowAgeLimit, int $ageLi
     ->assertExactJson([
         'data' => $usersBelowAgeLimit->toArray()
     ]);
+})->with([
+    [30, 30],
+    [40, 99],
+    [50, 77]
+]);
+
+it('should filter on minimum age', function (int $amountOfUsersBelowAgeLimit, int $ageLimit) {
+    // Given
+    $usersBelowAgeLimit = User::factory($amountOfUsersBelowAgeLimit)->create([
+        'age' => rand(1, $ageLimit - 1)
+    ]);
+
+    $usersAboveAgeLimit = User::factory(100)->create([
+        'age' => rand($ageLimit, 120)
+    ]);
+
+    // When
+    getJson(route('users.index', [
+        'filter[min_age]' => $ageLimit
+    ]))
+
+        // Then
+        ->assertJsonCount($usersAboveAgeLimit->count(), 'data')
+        ->assertExactJson([
+            'data' => $usersAboveAgeLimit->toArray()
+        ]);
 })->with([
     [30, 30],
     [40, 99],
