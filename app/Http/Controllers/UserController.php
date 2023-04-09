@@ -17,10 +17,22 @@ class UserController extends Controller
         $filter = $request->query('filter');
 
         $belowAge = (int) Arr::get($filter, 'belowAge');
+        $religion = Arr::get($filter, 'religion');
 
-        $result = User::query()
-            ->where('age', '<', $belowAge)
-            ->get();
+        if ($belowAge)
+        {
+            $result = User::query()
+                ->where('age', '<', $belowAge)
+                ->get();
+        } else if ($religion)
+        {
+            $result = User::query()
+                ->where('religion', $religion)
+                ->get();
+        } else {
+            $result = User::all();
+        }
+
 
         return new JsonResponse([
             'data' => $result

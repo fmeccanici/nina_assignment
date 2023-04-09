@@ -45,3 +45,29 @@ it('should filter on age', function (int $amountOfUsersBelowAgeLimit, int $ageLi
     [400, 99],
     [500, 77]
 ]);
+
+it('should filter on religion', function (int $amountOfReligiousUsers, string $religion) {
+    // Given
+    $religiousUsers = User::factory($amountOfReligiousUsers)->create([
+        'religion' => $religion
+    ]);
+
+    $atheistUsers = User::factory(100)->create([
+        'religion' => 'atheist'
+    ]);
+
+    // When
+    getJson(route('users.index', [
+        'filter[religion]' => $religion
+    ]))
+
+        // Then
+        ->assertJsonCount($religiousUsers->count(), 'data')
+        ->assertExactJson([
+            'data' => $religiousUsers->toArray()
+        ]);
+})->with([
+    [300, 30],
+    [400, 99],
+    [500, 77]
+]);
