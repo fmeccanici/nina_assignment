@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Allergy;
 use App\Models\User;
 use function Pest\Laravel\getJson;
 
@@ -119,10 +120,13 @@ it('should filter on age and religion', function (int $amountOfResultingUsers, s
 it('should filter on allergy', function (int $amountOfResultingUsers, string $allergy) {
     // Given
     $satisfyingAllergyUsers = User::factory($amountOfResultingUsers)
-        ->hasAllergies(1, [
-            'name' => $allergy
-        ])
-        ->create();
+        ->create()
+        ->each(function (User $user) use ($allergy) {
+            $allergy = Allergy::factory()->create([
+                'name' => $allergy
+            ]);
+            $user->allergies()->attach($allergy);
+        });
 
     User::factory(100)->create();
 
@@ -140,4 +144,35 @@ it('should filter on allergy', function (int $amountOfResultingUsers, string $al
     [300, 'eggs'],
     [400, 'peanuts'],
     [500, 'fish']
+]);
+
+it('should filter on allergies', function (int $amountOfResultingUsers, array $allergies) {
+    // Given
+    $satisfyingAllergyUsers = User::factory($amountOfResultingUsers)
+        ->create()
+        ->each(function (User $user) use ($allergies) {
+            collect($allergies)->each(function (string $allergy) use ($user) {
+                $allergy = Allergy::factory()->create([
+                    'name' => $allergy
+                ]);
+                $user->allergies()->attach($allergy);
+            });
+        });
+
+    User::factory(100)->create();
+
+    // When
+    getJson(route('users.index', [
+        'filter[users.allergies]' => implode(',', $allergies),
+    ]))
+        // Then
+        ->assertJsonCount($satisfyingAllergyUsers
+            ->count(), 'data')
+        ->assertExactJson([
+            'data' => $satisfyingAllergyUsers->toArray()
+        ]);
+})->with([
+    [30, ['eggs', 'tomato', 'walnuts']],
+    [40, ['peanuts', 'grass', 'milk']],
+    [50, ['fish', 'cheese', 'gluten']]
 ]);

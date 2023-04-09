@@ -9,7 +9,13 @@ class AllergiesFilter extends Filter
 
     function handle(Builder $query, \Closure $next): Builder
     {
-        $query->whereRelation('allergies', 'name', $this->value);
+        foreach (explode(',', $this->value) as $allergy)
+        {
+            $query->whereHas('allergies', function (Builder $query) use ($allergy) {
+                $query->where('name', $allergy);
+            });
+        }
+
         return $next($query);
     }
 }
