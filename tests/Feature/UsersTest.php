@@ -203,3 +203,27 @@ it('should filter on gender', function (int $amountOfUsers, bool $gender) {
     [40, Gender::FEMALE->value],
     [50, Gender::FEMALE->value],
 ]);
+
+it('should filter on zipcode', function (int $amountOfUsers, string $zipcode) {
+    // Given
+    $resultingUsers = User::factory($amountOfUsers)->create([
+        'zipcode' => $zipcode
+    ]);
+
+    $otherUsers = User::factory(100)->create();
+
+    // When
+    getJson(route('users.index', [
+        'filter[zipcode]' => $zipcode
+    ]))
+
+        // Then
+        ->assertJsonCount($resultingUsers->count(), 'data')
+        ->assertExactJson([
+            'data' => $resultingUsers->toArray()
+        ]);
+})->with([
+    [30, '3023AB'],
+    [40, '2020CD'],
+    [50, '2480PB'],
+]);

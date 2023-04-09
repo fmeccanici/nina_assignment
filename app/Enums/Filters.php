@@ -7,6 +7,7 @@ use App\Filters\BelowAgeFilter;
 use App\Filters\Filter;
 use App\Filters\GenderFilter;
 use App\Filters\ReligionFilter;
+use App\Filters\ZipcodeFilter;
 
 enum Filters: string
 {
@@ -14,6 +15,7 @@ enum Filters: string
     case RELIGION = 'religion';
     case ALLERGIES = 'users.allergies';
     case GENDER = 'gender';
+    case ZIPCODE = 'zipcode';
 
     public function create(int|string|bool $value): Filter
     {
@@ -22,6 +24,7 @@ enum Filters: string
             self::RELIGION => new ReligionFilter($value),
             self::ALLERGIES => new AllergiesFilter($value),
             self::GENDER => new GenderFilter($value),
+            self::ZIPCODE => new ZipcodeFilter($value),
         };
     }
 }

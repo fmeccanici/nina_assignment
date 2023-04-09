@@ -4,24 +4,24 @@ use App\Enums\Gender;
 use App\Models\Allergy;
 use App\Models\User;
 
-it('should have a religion, age, address and gender', function (string $religion, string $address,
+it('should have a religion, age, zipcode and gender', function (string $religion, string $zipcode,
                                                                 int $age, bool $gender) {
     $user = User::factory()->create([
         'religion' => $religion,
         'age' => $age,
-        'address' => $address,
+        'zipcode' => $zipcode,
         'gender' => $gender
     ]);
 
     expect($user->religion)
         ->toBe($religion)
         ->and($user->age)->toBe($age)
-        ->and($user->address)->toBe($address)
+        ->and($user->zipcode)->toBe($zipcode)
         ->and($user->gender)->toBe($gender);
 })->with([
-    ['christianity', 'John Doe Street 12', 32, Gender::MALE->value],
-    ['islam', 'Abrahamweg 1', 11, Gender::FEMALE->value],
-    ['hinduism', 'Rijksweg 13', 65, Gender::MALE->value]
+    ['christianity', '7741DN', 32, Gender::MALE->value],
+    ['islam', '7783BX', 11, Gender::FEMALE->value],
+    ['hinduism', '7741GZ', 65, Gender::MALE->value]
 ]);
 
 it('should have multiple allergies', function (int $amountOfAllergies) {

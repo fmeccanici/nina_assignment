@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'religion' => Arr::random(['christianity', 'islam', 'buddhism', 'hinduism', 'judaism']),
             'age' => rand(1, 120),
-            'address' => fake()->address,
+            'zipcode' => fake()->postcode,
             'gender' => (bool) rand(0, 1),
         ];
     }
