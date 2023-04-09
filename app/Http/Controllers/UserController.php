@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Filters;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,9 +29,10 @@ class UserController extends Controller
         }
         else if ($belowAge)
         {
-            $result = User::query()
-                ->where('age', '<', $belowAge)
-                ->get();
+            $query = User::query();
+            $filter = Filters::from('belowAge')->create($belowAge);
+            $filter->handle($query);
+            $result = $query->get();
         } else if ($religion)
         {
             $result = User::query()

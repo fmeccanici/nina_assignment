@@ -1,7 +1,7 @@
 <?php
 
+use App\Enums\Gender;
 use App\Models\Allergy;
-use App\Models\Gender;
 use App\Models\User;
 
 it('should have a religion, age, address and gender', function (string $religion, string $address,
