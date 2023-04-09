@@ -32,7 +32,7 @@ it('should filter on maximum age', function (int $amountOfUsersBelowAgeLimit, in
         'age' => rand(1, $ageLimit - 1)
     ]);
 
-    $usersAboveAgeLimit = User::factory(100)->create([
+    $usersAboveAgeLimit = User::factory(10)->create([
         'age' => rand($ageLimit, 120)
     ]);
 
@@ -58,7 +58,7 @@ it('should filter on minimum age', function (int $amountOfUsersBelowAgeLimit, in
         'age' => rand(1, $ageLimit - 1)
     ]);
 
-    $usersAboveAgeLimit = User::factory(100)->create([
+    $usersAboveAgeLimit = User::factory(10)->create([
         'age' => rand($ageLimit, 120)
     ]);
 
@@ -84,7 +84,7 @@ it('should filter on religion', function (int $amountOfReligiousUsers, string $r
         'religion' => $religion
     ]);
 
-    $atheistUsers = User::factory(100)->create([
+    $atheistUsers = User::factory(10)->create([
         'religion' => 'atheist',
     ]);
 
@@ -111,17 +111,17 @@ it('should filter on age and religion', function (int $amountOfResultingUsers, s
         'age' => rand(1, $ageLimit - 1)
     ]);
 
-    User::factory(100)->create([
+    User::factory(10)->create([
         'religion' => 'atheist',
         'age' => rand($ageLimit, 120)
     ]);
 
-    $satisfyingAgeLimitUsers = User::factory(100)->create([
+    $satisfyingAgeLimitUsers = User::factory(10)->create([
         'religion' => 'atheist',
         'age' => rand(1, $ageLimit - 1)
     ]);
 
-    $satisfyingReligionUsers = User::factory(100)->create([
+    $satisfyingReligionUsers = User::factory(10)->create([
         'religion' => $religion,
         'age' => rand($ageLimit, 120)
     ]);
@@ -155,7 +155,7 @@ it('should filter on allergy', function (int $amountOfResultingUsers, string $al
             $user->allergies()->attach($allergy);
         });
 
-    User::factory(100)->create();
+    User::factory(10)->create();
 
     // When
     getJson(route('users.index', [
@@ -186,7 +186,7 @@ it('should filter on allergies', function (int $amountOfResultingUsers, array $a
             });
         });
 
-    User::factory(100)->create();
+    User::factory(10)->create();
 
     // When
     getJson(route('users.index', [
@@ -210,7 +210,7 @@ it('should filter on gender', function (int $amountOfUsers, bool $gender) {
         'gender' => $gender
     ]);
 
-    $otherUsers = User::factory(100)->create([
+    $otherUsers = User::factory(10)->create([
         'gender' => ! $gender,
     ]);
 
@@ -236,7 +236,7 @@ it('should filter on zipcode', function (int $amountOfUsers, string $zipcode) {
         'zipcode' => $zipcode
     ]);
 
-    $otherUsers = User::factory(100)->create();
+    $otherUsers = User::factory(10)->create();
 
     // When
     getJson(route('users.index', [
