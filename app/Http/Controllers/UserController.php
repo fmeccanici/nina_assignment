@@ -6,6 +6,7 @@ use App\Enums\Filters;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class UserController extends Controller
 {
@@ -14,18 +15,19 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = $request->collect('filter');
+        $filters = $request->collect('filter')
+            ->map(fn (int|string $value, string $filter) =>
+                Filters::from($filter)->create($value)
+            )->toArray();
 
-        $query = User::query();
-
-        foreach ($filters as $filter => $value)
-        {
-            $filter = Filters::from($filter)->create($value);
-            $filter->handle($query);
-        }
+        $result = app(Pipeline::class)
+            ->send(User::query())
+            ->through($filters)
+            ->thenReturn()
+            ->get();
 
         return new JsonResponse([
-            'data' => $query->get()
+            'data' => $result->toArray()
         ]);
     }
 

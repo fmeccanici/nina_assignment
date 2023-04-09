@@ -9,5 +9,5 @@ abstract class Filter
     public function __construct(protected readonly int|string $value)
     {}
 
-    abstract function handle(Builder $query): void;
+    abstract function handle(Builder $query, \Closure $next): Builder;
 }
