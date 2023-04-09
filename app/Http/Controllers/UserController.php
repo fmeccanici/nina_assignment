@@ -3,18 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return [
-            'data' => User::all()
-        ];
+        $filter = $request->query('filter');
+
+        $belowAge = (int) Arr::get($filter, 'belowAge');
+
+        $result = User::query()
+            ->where('age', '<', $belowAge)
+            ->get();
+
+        return new JsonResponse([
+            'data' => $result
+        ]);
     }
 
     /**
