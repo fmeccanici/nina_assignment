@@ -115,3 +115,29 @@ it('should filter on age and religion', function (int $amountOfResultingUsers, s
     [400, 'judaism', 99],
     [500, 'hinduism', 77]
 ]);
+
+it('should filter on allergy', function (int $amountOfResultingUsers, string $allergy) {
+    // Given
+    $satisfyingAllergyUsers = User::factory($amountOfResultingUsers)
+        ->hasAllergies(1, [
+            'name' => $allergy
+        ])
+        ->create();
+
+    User::factory(100)->create();
+
+    // When
+    getJson(route('users.index', [
+        'filter[users.allergies]' => $allergy,
+    ]))
+        // Then
+        ->assertJsonCount($satisfyingAllergyUsers
+            ->count(), 'data')
+        ->assertExactJson([
+            'data' => $satisfyingAllergyUsers->toArray()
+        ]);
+})->with([
+    [300, 'eggs'],
+    [400, 'peanuts'],
+    [500, 'fish']
+]);
