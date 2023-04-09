@@ -6,7 +6,6 @@ use App\Enums\Filters;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
@@ -15,38 +14,18 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = $request->query('filter');
+        $filters = $request->collect('filter');
 
-        $belowAge = (int) Arr::get($filter, 'belowAge');
-        $religion = Arr::get($filter, 'religion');
+        $query = User::query();
 
-        if ($belowAge && $religion)
+        foreach ($filters as $filter => $value)
         {
-            $result = User::query()
-                ->where('age', '<', $belowAge)
-                ->where('religion', $religion)
-                ->get();
-        }
-        else if ($belowAge)
-        {
-            $query = User::query();
-            $filter = Filters::from('belowAge')->create($belowAge);
+            $filter = Filters::from($filter)->create($value);
             $filter->handle($query);
-            $result = $query->get();
-        } else if ($religion)
-        {
-            $query = User::query();
-            $filter = Filters::from('religion')->create($religion);
-            $filter->handle($query);
-            $result = $query->get();
         }
-        else {
-            $result = User::all();
-        }
-
 
         return new JsonResponse([
-            'data' => $result
+            'data' => $query->get()
         ]);
     }
 
