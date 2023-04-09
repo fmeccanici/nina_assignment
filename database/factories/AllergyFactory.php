@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Allergy>
@@ -17,7 +18,7 @@ class AllergyFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => Arr::random(['gluten', 'eggs', 'fish', 'walnuts', 'grass'])
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Gender;
 use App\Models\Allergy;
 use App\Models\User;
 use function Pest\Laravel\getJson;
@@ -46,9 +47,9 @@ it('should filter on age', function (int $amountOfUsersBelowAgeLimit, int $ageLi
         'data' => $usersBelowAgeLimit->toArray()
     ]);
 })->with([
-    [300, 30],
-    [400, 99],
-    [500, 77]
+    [30, 30],
+    [40, 99],
+    [50, 77]
 ]);
 
 it('should filter on religion', function (int $amountOfReligiousUsers, string $religion) {
@@ -72,9 +73,9 @@ it('should filter on religion', function (int $amountOfReligiousUsers, string $r
             'data' => $religiousUsers->toArray()
         ]);
 })->with([
-    [300, 'christianity'],
-    [400, 'judaism'],
-    [500, 'hinduism']
+    [30, 'christianity'],
+    [40, 'judaism'],
+    [50, 'hinduism']
 ]);
 
 it('should filter on age and religion', function (int $amountOfResultingUsers, string $religion, int $ageLimit) {
@@ -112,9 +113,9 @@ it('should filter on age and religion', function (int $amountOfResultingUsers, s
             'data' => $satisfyingAgeLimitAndReligionUsers->toArray()
         ]);
 })->with([
-    [300, 'christianity', 30],
-    [400, 'judaism', 99],
-    [500, 'hinduism', 77]
+    [30, 'christianity', 30],
+    [40, 'judaism', 99],
+    [50, 'hinduism', 77]
 ]);
 
 it('should filter on allergy', function (int $amountOfResultingUsers, string $allergy) {
@@ -141,9 +142,9 @@ it('should filter on allergy', function (int $amountOfResultingUsers, string $al
             'data' => $satisfyingAllergyUsers->toArray()
         ]);
 })->with([
-    [300, 'eggs'],
-    [400, 'peanuts'],
-    [500, 'fish']
+    [30, 'eggs'],
+    [40, 'peanuts'],
+    [50, 'fish']
 ]);
 
 it('should filter on allergies', function (int $amountOfResultingUsers, array $allergies) {
@@ -175,4 +176,30 @@ it('should filter on allergies', function (int $amountOfResultingUsers, array $a
     [30, ['eggs', 'tomato', 'walnuts']],
     [40, ['peanuts', 'grass', 'milk']],
     [50, ['fish', 'cheese', 'gluten']]
+]);
+
+it('should filter on gender', function (int $amountOfUsers, bool $gender) {
+    // Given
+    $resultingUsers = User::factory($amountOfUsers)->create([
+        'gender' => $gender
+    ]);
+
+    $otherUsers = User::factory(100)->create([
+        'gender' => ! $gender,
+    ]);
+
+    // When
+    getJson(route('users.index', [
+        'filter[gender]' => $gender
+    ]))
+
+        // Then
+        ->assertJsonCount($resultingUsers->count(), 'data')
+        ->assertExactJson([
+            'data' => $resultingUsers->toArray()
+        ]);
+})->with([
+    [30, Gender::MALE->value],
+    [40, Gender::FEMALE->value],
+    [50, Gender::FEMALE->value],
 ]);

@@ -26,7 +26,7 @@ class GetUsers
     public function asController(Request $request)
     {
         $filters = $request->collect('filter')
-            ->map(fn (int|string $value, string $filter) =>
+            ->map(fn (int|string|bool $value, string $filter) =>
             Filters::from($filter)->create($value)
             );
 

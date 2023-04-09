@@ -25,7 +25,7 @@ it('should have a religion, age, address and gender', function (string $religion
 ]);
 
 it('should have multiple allergies', function (int $amountOfAllergies) {
-    $user = User::factory()->has(Allergy::factory($amountOfAllergies))->create();
+    $user = User::factory()->hasAttached(Allergy::factory($amountOfAllergies))->create();
 
     expect($user->allergies)->toHaveCount($amountOfAllergies);
 })->with([
