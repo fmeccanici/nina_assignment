@@ -53,7 +53,7 @@ it('should filter on religion', function (int $amountOfReligiousUsers, string $r
     ]);
 
     $atheistUsers = User::factory(100)->create([
-        'religion' => 'atheist'
+        'religion' => 'atheist',
     ]);
 
     // When
@@ -67,7 +67,47 @@ it('should filter on religion', function (int $amountOfReligiousUsers, string $r
             'data' => $religiousUsers->toArray()
         ]);
 })->with([
-    [300, 30],
-    [400, 99],
-    [500, 77]
+    [300, 'christianity'],
+    [400, 'judaism'],
+    [500, 'hinduism']
+]);
+
+it('should filter on age and religion', function (int $amountOfResultingUsers, string $religion, int $ageLimit) {
+    // Given
+    $satisfyingAgeLimitAndReligionUsers = User::factory($amountOfResultingUsers)->create([
+        'religion' => $religion,
+        'age' => rand(1, $ageLimit - 1)
+    ]);
+
+    User::factory(100)->create([
+        'religion' => 'atheist',
+        'age' => rand($ageLimit, 120)
+    ]);
+
+    $satisfyingAgeLimitUsers = User::factory(100)->create([
+        'religion' => 'atheist',
+        'age' => rand(1, $ageLimit - 1)
+    ]);
+
+    $satisfyingReligionUsers = User::factory(100)->create([
+        'religion' => $religion,
+        'age' => rand($ageLimit, 120)
+    ]);
+
+    // When
+    getJson(route('users.index', [
+        'filter[religion]' => $religion,
+        'filter[belowAge]' => $ageLimit
+    ]))
+
+        // Then
+        ->assertJsonCount($satisfyingAgeLimitAndReligionUsers
+            ->count(), 'data')
+        ->assertExactJson([
+            'data' => $satisfyingAgeLimitAndReligionUsers->toArray()
+        ]);
+})->with([
+    [300, 'christianity', 30],
+    [400, 'judaism', 99],
+    [500, 'hinduism', 77]
 ]);

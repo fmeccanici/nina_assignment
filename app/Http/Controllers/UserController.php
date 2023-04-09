@@ -19,7 +19,14 @@ class UserController extends Controller
         $belowAge = (int) Arr::get($filter, 'belowAge');
         $religion = Arr::get($filter, 'religion');
 
-        if ($belowAge)
+        if ($belowAge && $religion)
+        {
+            $result = User::query()
+                ->where('age', '<', $belowAge)
+                ->where('religion', $religion)
+                ->get();
+        }
+        else if ($belowAge)
         {
             $result = User::query()
                 ->where('age', '<', $belowAge)
@@ -29,7 +36,8 @@ class UserController extends Controller
             $result = User::query()
                 ->where('religion', $religion)
                 ->get();
-        } else {
+        }
+        else {
             $result = User::all();
         }
 
